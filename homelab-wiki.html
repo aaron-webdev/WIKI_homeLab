@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home Lab Wiki — 50 Projects</title>
+<style>
+:root {
+  --bg-primary:     #0f1117;
+  --bg-secondary:   #161b27;
+  --bg-card:        #1a2133;
+  --bg-hover:       #1f2a3d;
+  --border-card:    1px solid #2e3d55;
+  --border-hover:   1px solid #4a6080;
+  --border-accent:  1px solid #3b82f6;
+  --text-primary:   #e8edf5;
+  --text-secondary: #8b9ab5;
+  --text-muted:     #4e5d75;
+  --text-accent:    #60a5fa;
+  --radius-sm:      6px;
+  --radius-md:      10px;
+  --radius-lg:      14px;
+  --phase1-bg:      #0d2e1f; --phase1-text: #4ade80; --phase1-border: #166534;
+  --phase2-bg:      #0c1f3d; --phase2-text: #60a5fa; --phase2-border: #1d4ed8;
+  --phase3-bg:      #2d1a06; --phase3-text: #fb923c; --phase3-border: #92400e;
+  --phase4-bg:      #1e0f3d; --phase4-text: #c084fc; --phase4-border: #6d28d9;
+  --font-sans:      'Inter', 'Segoe UI', system-ui, sans-serif;
+  --font-mono:      'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+.wiki-wrap { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+.page-header { margin-bottom: 1.75rem; }
+.page-header h1 { font-size: 22px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+.page-header p  { font-size: 14px; color: var(--text-secondary); }
+
+.stats-row { display: flex; gap: 10px; margin-bottom: 1.5rem; }
+.stat {
+  flex: 1;
+  background: var(--bg-card);
+  border: var(--border-card);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+.stat span { display: block; font-size: 22px; font-weight: 600; color: var(--text-primary); line-height: 1.2; margin-bottom: 2px; }
+
+.top-bar { display: flex; gap: 8px; margin-bottom: 0.75rem; }
+.search-box {
+  flex: 1;
+  padding: 10px 14px;
+  background: var(--bg-card);
+  border: var(--border-card);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 14px;
+  font-family: var(--font-sans);
+  transition: border-color .15s;
+}
+.search-box::placeholder { color: var(--text-muted); }
+.search-box:focus { outline: none; border: var(--border-accent); }
+
+.filter-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 0.75rem; }
+.pill {
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid #2e3d55;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: background .12s, border-color .12s, color .12s;
+}
+.pill:hover { background: var(--bg-hover); color: var(--text-primary); border-color: #4a6080; }
+.pill.active { background: var(--bg-hover); color: var(--text-primary); border: 1px solid #4a6080; font-weight: 500; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; margin-top: 1rem; }
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid #2e3d55;
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: background .12s, border-color .15s, transform .1s;
+}
+.card:hover { background: var(--bg-hover); border-color: #4a6080; transform: translateY(-1px); }
+.card:active { transform: translateY(0); }
+.card-id { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); margin-bottom: 5px; letter-spacing: .02em; }
+.card-title { font-size: 13px; font-weight: 500; line-height: 1.4; color: var(--text-primary); margin-bottom: 8px; }
+.card-badges { display: flex; gap: 5px; flex-wrap: wrap; }
+
+.badge { font-size: 10px; font-weight: 600; padding: 3px 7px; border-radius: 20px; letter-spacing: .02em; border: 1px solid transparent; }
+.ph1 { background: var(--phase1-bg); color: var(--phase1-text); border-color: var(--phase1-border); }
+.ph2 { background: var(--phase2-bg); color: var(--phase2-text); border-color: var(--phase2-border); }
+.ph3 { background: var(--phase3-bg); color: var(--phase3-text); border-color: var(--phase3-border); }
+.ph4 { background: var(--phase4-bg); color: var(--phase4-text); border-color: var(--phase4-border); }
+.cat-badge { background: var(--bg-card); color: var(--text-secondary); border-color: #2e3d55; }
+
+.detail {
+  background: var(--bg-card);
+  border: 1px solid #2e3d55;
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+}
+.detail-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 8px; margin-bottom: 1rem; padding-bottom: 1rem;
+  border-bottom: 1px solid #1e2d45;
+}
+.detail-id    { font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+.detail-title { font-size: 18px; font-weight: 600; color: var(--text-primary); margin: 4px 0 8px; line-height: 1.3; }
+.detail-desc  { font-size: 14px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 1.25rem; }
+.detail-section { margin-bottom: 1.1rem; }
+.detail-label { font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 7px; }
+
+.tag-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.tool-tag {
+  font-size: 12px; font-family: var(--font-mono); padding: 3px 9px;
+  border-radius: var(--radius-sm); background: #111827; color: #94a3b8;
+  border: 1px solid #1e2d45;
+}
+.link-tag {
+  font-size: 12px; font-family: var(--font-sans); padding: 4px 10px;
+  border-radius: var(--radius-sm); background: #0c1f3d; color: var(--text-accent);
+  border: 1px solid #1d4ed8; cursor: pointer; transition: background .12s, border-color .12s;
+}
+.link-tag:hover { background: #122448; border-color: #3b82f6; text-decoration: underline; }
+
+.resume-box {
+  background: #0d1e0d; border: 1px solid #166534;
+  border-radius: var(--radius-md); padding: 12px 14px;
+  font-size: 13px; color: #86efac; line-height: 1.6;
+}
+.resume-box strong { color: #4ade80; font-weight: 600; }
+
+.back-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 13px; font-family: var(--font-sans); color: var(--text-secondary);
+  background: none; border: none; cursor: pointer; padding: 0;
+  margin-bottom: 1rem; transition: color .12s;
+}
+.back-btn:hover { color: var(--text-primary); }
+
+.no-results { text-align: center; padding: 3rem; color: var(--text-muted); font-size: 14px; }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb { background: #2e3d55; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #4a6080; }
+
+@media (max-width: 600px) {
+  .stats-row { display: grid; grid-template-columns: 1fr 1fr; }
+  .grid { grid-template-columns: 1fr 1fr; }
+  .wiki-wrap { padding: 1rem; }
+}
+</style>
+</head>
+<body>
+<div class="wiki-wrap">
+
+  <div class="page-header">
+    <h1>Home Lab Wiki</h1>
+    <p>50 projects · click any card to explore · linked prerequisites and related projects</p>
+  </div>
+
+  <div id="app"></div>
+
+</div>
+<script>
+const PROJECTS = [
+  {id:1,title:"Jellyfin music server",cat:"Media",phase:1,desc:"Your first win. Stream your music library from anywhere on your network. Lightweight, runs fine on the N2820 or 2011 MBP right now.",tools:["Jellyfin","Docker","Linux"],prereqs:[31],related:[2,7],resume:"Media server administration, Linux service deployment"},
+  {id:2,title:"Jellyfin movie & TV streaming",cat:"Media",phase:2,desc:"Expand Jellyfin to serve your video library. The 2011 MBP's Quick Sync handles H.264 transcoding. Avoid H.265 content or plan to re-encode.",tools:["Jellyfin","Quick Sync","FFmpeg"],prereqs:[1,31],related:[3,4,5],resume:"Hardware-accelerated transcoding, codec knowledge, performance tuning"},
+  {id:3,title:"Sonarr + Radarr media management",cat:"Media",phase:2,desc:"Automate your TV and movie library organization. Sonarr manages TV, Radarr handles movies. Both integrate directly with Jellyfin.",tools:["Sonarr","Radarr","Docker"],prereqs:[31],related:[2,4],resume:"Service integration, automation pipelines"},
+  {id:4,title:"Metadata scraping",cat:"Media",phase:2,desc:"Configure Jellyfin to auto-pull cover art, plot descriptions, cast info, and ratings from TMDB and MusicBrainz.",tools:["Jellyfin","TMDB API","MusicBrainz"],prereqs:[1],related:[2,3],resume:"API integration, data enrichment"},
+  {id:5,title:"Remote Jellyfin access",cat:"Media",phase:2,desc:"Expose Jellyfin safely to the internet via a reverse proxy. Requires a domain name and SSL cert. You can stream from your phone anywhere.",tools:["Nginx","Caddy","Let's Encrypt"],prereqs:[1,26],related:[25,27],resume:"Reverse proxy configuration, network security, DNS management"},
+  {id:6,title:"Multi-user Jellyfin profiles",cat:"Media",phase:2,desc:"Set up separate user accounts with individual watch history, parental controls, and library access permissions.",tools:["Jellyfin"],prereqs:[2],related:[24],resume:"Role-based access control, user management"},
+  {id:7,title:"Audiobookshelf",cat:"Media",phase:2,desc:"A dedicated server for podcasts and audiobooks with a beautiful mobile app. Tracks listen progress across devices.",tools:["Audiobookshelf","Docker"],prereqs:[31],related:[1],resume:"Container deployment, self-hosted service management"},
+  {id:8,title:"Beets music tagger",cat:"Media",phase:1,desc:"Automatically clean and tag your entire music collection. Fetches metadata from MusicBrainz and embeds it in your files.",tools:["Beets","Python","MusicBrainz"],prereqs:[],related:[1,4],resume:"CLI tooling, data quality automation, Python scripting"},
+  {id:9,title:"CUPS print server",cat:"Network",phase:1,desc:"Share any USB or network printer across your entire home network. Every computer can print without installing drivers.",tools:["CUPS","Linux","Avahi"],prereqs:[],related:[10],resume:"Linux system administration, network services"},
+  {id:10,title:"AirPrint bridge",cat:"Network",phase:1,desc:"Make any CUPS printer discoverable by iPhones and iPads. Uses Avahi (mDNS) to broadcast printer availability on the network.",tools:["Avahi","CUPS","mDNS"],prereqs:[9],related:[9,13],resume:"mDNS/Bonjour networking, cross-platform compatibility"},
+  {id:11,title:"Pi-hole DNS sinkhole",cat:"Network",phase:1,desc:"Block ads and tracking for every device on your network at the DNS level. No client software needed — it just works for everything.",tools:["Pi-hole","Docker","DNS"],prereqs:[12],related:[12,16],resume:"DNS administration, network-level filtering, cybersecurity basics"},
+  {id:12,title:"Local DNS with custom hostnames",cat:"Network",phase:1,desc:"Give your services real names instead of IP addresses. Access jellyfin.home, pihole.home, etc. from anywhere on your network.",tools:["Pi-hole","dnsmasq","BIND9"],prereqs:[31],related:[11,13,16],resume:"DNS zone configuration, internal network architecture"},
+  {id:13,title:"Samba NAS file sharing",cat:"Network",phase:2,desc:"Create network drives that any Windows, Mac, or Linux machine can mount. Share your media, documents, and backups across devices.",tools:["Samba","Linux","NFS"],prereqs:[],related:[14,15,39],resume:"SMB/NFS protocols, network storage administration"},
+  {id:14,title:"Nextcloud personal cloud",cat:"Network",phase:2,desc:"Your own Google Drive, Contacts, and Calendar replacement. Full mobile sync, file versioning, and sharing — all on your hardware.",tools:["Nextcloud","Docker","PostgreSQL"],prereqs:[31,26],related:[13,15],resume:"Full-stack service deployment, database administration"},
+  {id:15,title:"Syncthing file sync",cat:"Network",phase:2,desc:"Automatically sync folders between all your devices without any cloud service. Encrypted, peer-to-peer, no account required.",tools:["Syncthing","Docker"],prereqs:[31],related:[13,14,40],resume:"P2P protocols, data synchronization, encryption basics"},
+  {id:16,title:"Static DHCP leases",cat:"Network",phase:1,desc:"Assign permanent IP addresses to every device on your network by MAC address. Essential foundation for every other network service.",tools:["Router/pfSense","dnsmasq"],prereqs:[],related:[12,28],resume:"DHCP administration, network inventory management"},
+  {id:17,title:"Fail2Ban",cat:"Security",phase:1,desc:"Automatically ban IP addresses that brute-force your SSH or web services. Parses log files and calls iptables to block repeat offenders.",tools:["Fail2Ban","iptables","Linux"],prereqs:[],related:[18,25,29],resume:"Intrusion prevention, log analysis, firewall rule management"},
+  {id:18,title:"CrowdSec",cat:"Security",phase:2,desc:"A collaborative threat intelligence platform. Shares bad IP data across a global community. Installs alongside Fail2Ban or replaces it.",tools:["CrowdSec","Docker"],prereqs:[31],related:[17,21],resume:"Threat intelligence, community-driven security, API integration"},
+  {id:19,title:"Wazuh SIEM",cat:"Security",phase:3,desc:"Enterprise-grade security information and event management. Collects logs from all your services, detects threats, and alerts you. Needs 16GB RAM.",tools:["Wazuh","Elasticsearch","Docker"],prereqs:[31,38],related:[20,21,27],resume:"SIEM deployment and management — this alone is a major resume item"},
+  {id:20,title:"Cowrie SSH honeypot",cat:"Security",phase:2,desc:"A fake SSH server that logs every attack attempt in detail. Watch bots try to log in with default credentials in real time. Endlessly educational.",tools:["Cowrie","Docker","Python"],prereqs:[31],related:[19,22,29],resume:"Threat intelligence collection, attacker behavior analysis, honeypot architecture"},
+  {id:21,title:"Suricata IDS/IPS",cat:"Security",phase:3,desc:"Deep packet inspection on your network traffic. Detects intrusions, port scans, and malware signatures in real time.",tools:["Suricata","Docker","pfSense"],prereqs:[28,31],related:[19,18,29],resume:"Network intrusion detection, packet analysis, signature-based detection"},
+  {id:22,title:"OpenVAS vulnerability scanner",cat:"Security",phase:3,desc:"Scan your own network for known vulnerabilities the same way a professional pentester would. Generates detailed reports.",tools:["OpenVAS","Docker"],prereqs:[31,16],related:[23,30],resume:"Vulnerability assessment, CVE analysis, remediation documentation"},
+  {id:23,title:"Nessus Essentials",cat:"Security",phase:3,desc:"Industry-standard vulnerability scanner, free tier allows 16 IPs. Having Nessus scan results on a portfolio is immediately recognizable to hiring managers.",tools:["Nessus","Tenable"],prereqs:[16],related:[22,50],resume:"Professional-grade vulnerability scanning — recognized tool in industry"},
+  {id:24,title:"Authelia SSO portal",cat:"Security",phase:3,desc:"A single sign-on gateway with 2FA sitting in front of all your web services. One login protects everything exposed to the internet.",tools:["Authelia","LDAP","TOTP"],prereqs:[26,5],related:[6,25,28],resume:"Identity and access management, 2FA implementation, zero-trust architecture"},
+  {id:25,title:"WireGuard VPN server",cat:"Security",phase:2,desc:"A modern, fast VPN that lets you securely reach your home lab from anywhere. Far simpler than OpenVPN and much faster.",tools:["WireGuard","Linux"],prereqs:[26],related:[5,24,17],resume:"VPN configuration, cryptography basics, remote access security"},
+  {id:26,title:"Let's Encrypt SSL everywhere",cat:"Security",phase:2,desc:"Free, auto-renewing SSL certificates for all your services. No more browser warnings. Uses certbot or Caddy's built-in ACME client.",tools:["Certbot","Let's Encrypt","Caddy"],prereqs:[12],related:[5,14,24],resume:"PKI basics, TLS configuration, certificate lifecycle management"},
+  {id:27,title:"Audit logging pipeline",cat:"Security",phase:3,desc:"Track every login, config change, and service event across your entire stack. Feed logs into your SIEM for correlation and alerting.",tools:["auditd","rsyslog","Wazuh"],prereqs:[19,31],related:[19,35,43],resume:"Log management, compliance basics, security operations"},
+  {id:28,title:"VLAN network segmentation",cat:"Security",phase:3,desc:"Separate your IoT devices, lab machines, and personal devices into isolated network segments. A compromised IoT device can't reach your servers.",tools:["pfSense","OPNsense","managed switch"],prereqs:[16],related:[21,29,11],resume:"Network architecture, defense-in-depth, firewall policy design"},
+  {id:29,title:"ntopng traffic analysis",cat:"Security",phase:2,desc:"A visual dashboard showing everything happening on your network in real time — top talkers, protocols, geographic connections.",tools:["ntopng","Docker"],prereqs:[31],related:[21,36,11],resume:"Network monitoring, traffic analysis, baseline establishment"},
+  {id:30,title:"Lynis security auditing",cat:"Security",phase:2,desc:"Automated hardening checks on your Linux installation. Identifies misconfigurations, weak permissions, and missing patches. Run it on every new server.",tools:["Lynis","Bash"],prereqs:[],related:[22,17],resume:"Linux hardening, security benchmarking, CIS controls familiarity"},
+  {id:31,title:"Docker + Docker Compose",cat:"Automation",phase:1,desc:"The foundation that everything else runs on. Learn to write Compose files and you can deploy any service in minutes. Non-negotiable as skill one.",tools:["Docker","Docker Compose","YAML"],prereqs:[],related:[32,33,35],resume:"Container orchestration — foundational cloud-era skill"},
+  {id:32,title:"Portainer",cat:"Automation",phase:1,desc:"A web GUI for managing all your Docker containers, images, volumes, and networks. Great for learning what's actually running on your system.",tools:["Portainer","Docker"],prereqs:[31],related:[31,35],resume:"Container management, visual operations tooling"},
+  {id:33,title:"Ansible playbooks",cat:"Automation",phase:2,desc:"Automate your entire server setup from scratch with a single command. If your machine dies, you can rebuild everything in 20 minutes.",tools:["Ansible","YAML","SSH"],prereqs:[],related:[34,45,46],resume:"Infrastructure as code, configuration management — serious DevOps skill"},
+  {id:34,title:"Watchtower auto-updates",cat:"Automation",phase:2,desc:"Automatically pull and redeploy updated Docker containers when new versions are released. Keep everything patched without manual work.",tools:["Watchtower","Docker"],prereqs:[31],related:[31,35],resume:"Patch management automation, container lifecycle"},
+  {id:35,title:"Uptime Kuma monitoring",cat:"Automation",phase:2,desc:"Monitor whether every service is alive, with push/email/Discord alerts when something goes down. A beautiful self-hosted alternative to Uptime Robot.",tools:["Uptime Kuma","Docker"],prereqs:[31],related:[36,37,32],resume:"Service monitoring, alerting design, SLA awareness"},
+  {id:36,title:"Grafana + Prometheus",cat:"Automation",phase:2,desc:"Real-time system metrics with beautiful, customizable dashboards. Prometheus scrapes metrics, Grafana visualizes them. The industry-standard observability stack.",tools:["Grafana","Prometheus","Docker"],prereqs:[31],related:[35,37,29],resume:"Observability stack deployment — Grafana appears in almost every DevOps job posting"},
+  {id:37,title:"Netdata real-time monitoring",cat:"Automation",phase:1,desc:"Lightweight real-time performance monitoring with a built-in web UI. Very low overhead — safe to run on the 2011 MBP without impacting other services.",tools:["Netdata","Docker"],prereqs:[],related:[36,35],resume:"Systems monitoring, performance baseline establishment"},
+  {id:38,title:"Cron + Bash automation",cat:"Automation",phase:1,desc:"Scheduled scripts for backups, disk health checks, log cleanup, and anything repetitive. The building block of all automation.",tools:["Bash","cron","systemd timers"],prereqs:[],related:[39,43,34],resume:"Shell scripting, task scheduling, Linux system administration"},
+  {id:39,title:"Restic automated backups",cat:"Storage",phase:2,desc:"Encrypted, deduplicated, incremental backups on a schedule. Backs up to local disk, external drive, or cloud. The most important thing you're not running yet.",tools:["Restic","Bash","cron"],prereqs:[38],related:[40,41,43],resume:"Backup strategy design, data protection, encryption implementation"},
+  {id:40,title:"3-2-1 backup strategy",cat:"Storage",phase:2,desc:"3 copies of data, on 2 different media types, with 1 offsite. Backblaze B2 is free for first 10GB. This is enterprise standard practice.",tools:["Restic","Backblaze B2","rclone"],prereqs:[39],related:[39,41],resume:"Business continuity planning, enterprise backup methodology"},
+  {id:41,title:"SMART disk monitoring",cat:"Storage",phase:1,desc:"Monitor hard drive health metrics and get alerts before a drive fails. A dying drive will warn you weeks in advance if you're listening.",tools:["smartmontools","Bash","cron"],prereqs:[38],related:[39,43],resume:"Proactive infrastructure management, hardware health monitoring"},
+  {id:42,title:"Checksum verification scripts",cat:"Storage",phase:2,desc:"Verify that your media files haven't silently corrupted over time. Write Bash scripts that hash files and compare against stored values.",tools:["sha256sum","Bash","Python"],prereqs:[38],related:[39,43],resume:"Data integrity validation, scripting, storage QA"},
+  {id:43,title:"Log rotation with logrotate",cat:"Storage",phase:1,desc:"Configure logrotate to manage log file sizes across all your services. Without this, logs silently fill your drive over weeks.",tools:["logrotate","Linux"],prereqs:[],related:[27,38,41],resume:"Linux systems administration, operational hygiene"},
+  {id:44,title:"LVM snapshot scheduling",cat:"Storage",phase:3,desc:"Take instant snapshots of your logical volumes before updates so you can roll back if something breaks. Standard practice in production environments.",tools:["LVM","Bash","cron"],prereqs:[38],related:[39,45],resume:"Storage management, rollback strategy, production operations mindset"},
+  {id:45,title:"Proxmox hypervisor",cat:"Infrastructure",phase:3,desc:"Run multiple VMs and containers on one machine like a real data center. The skills transfer directly to VMware, Hyper-V, and cloud providers. Needs 16GB RAM.",tools:["Proxmox","KVM","LXC"],prereqs:[],related:[33,46,47,48],resume:"Virtualization administration — directly transferable to enterprise VMware/cloud"},
+  {id:46,title:"Gitea self-hosted Git",cat:"Infrastructure",phase:2,desc:"Your own GitHub. Version control for every script, config file, Ansible playbook, and Docker Compose file you write. Never lose work again.",tools:["Gitea","Git","Docker"],prereqs:[31],related:[33,50,47],resume:"Version control administration, GitOps practices"},
+  {id:47,title:"Wiki.js or BookStack",cat:"Infrastructure",phase:2,desc:"Document every project you build as you build it. This wiki becomes your portfolio. Future employers can read exactly what you built and how you think.",tools:["Wiki.js","BookStack","Markdown"],prereqs:[31,26],related:[50,46],resume:"Technical documentation, knowledge management — shows professional maturity"},
+  {id:48,title:"Kali Linux VM",cat:"Infrastructure",phase:3,desc:"A dedicated VM for practicing offensive security tools against your own lab — legally and safely. Nmap, Metasploit, Burp Suite, and more.",tools:["Kali Linux","Metasploit","Nmap","Burp Suite"],prereqs:[45],related:[22,23,20],resume:"Penetration testing fundamentals, offensive security tooling"},
+  {id:49,title:"Home Assistant",cat:"Infrastructure",phase:3,desc:"Automate smart home devices and tie them into your security stack. Trigger alerts based on motion, doors, or network events.",tools:["Home Assistant","Docker","MQTT"],prereqs:[31,12],related:[21,36,37],resume:"IoT integration, automation logic, sensor data pipelines"},
+  {id:50,title:"Public portfolio & writeups",cat:"Infrastructure",phase:4,desc:"A GitHub repo + README or personal site documenting your entire lab journey. This is the project that makes all 49 others count on a resume.",tools:["GitHub","Markdown","HTML"],prereqs:[46,47],related:[47,46,23],resume:"Technical communication, portfolio presentation — the multiplier for everything else"}
+];
+
+const CATS   = ["All",...[...new Set(PROJECTS.map(p=>p.cat))]];
+const PHASES  = ["All","Phase 1","Phase 2","Phase 3","Phase 4"];
+const PH_LBL  = {1:"Phase 1",2:"Phase 2",3:"Phase 3",4:"Phase 4"};
+const PH_CLS  = {1:"ph1",2:"ph2",3:"ph3",4:"ph4"};
+
+let state = {cat:"All",phase:"All",search:"",selected:null};
+
+const get  = id => PROJECTS.find(p=>p.id===id);
+const app  = () => document.getElementById("app");
+
+function filtered(){
+  return PROJECTS.filter(p=>{
+    if(state.cat!=="All"&&p.cat!==state.cat) return false;
+    if(state.phase!=="All"&&"Phase "+p.phase!==state.phase) return false;
+    if(state.search){
+      const q=state.search.toLowerCase();
+      return p.title.toLowerCase().includes(q)||p.tools.join(" ").toLowerCase().includes(q)||p.desc.toLowerCase().includes(q);
+    }
+    return true;
+  });
+}
+
+function render(){
+  state.selected ? renderDetail() : renderGrid();
+}
+
+function renderGrid(){
+  const items = filtered();
+  app().innerHTML = `
+  <div class="stats-row">
+    <div class="stat"><span>50</span>total projects</div>
+    <div class="stat"><span style="color:var(--phase1-text)">${PROJECTS.filter(p=>p.phase===1).length}</span>start now</div>
+    <div class="stat"><span style="color:var(--phase2-text)">${PROJECTS.filter(p=>p.phase===2).length}</span>phase 2</div>
+    <div class="stat"><span style="color:var(--phase3-text)">20</span>security</div>
+  </div>
+  <div class="top-bar">
+    <input class="search-box" id="srch" placeholder="Search projects, tools, keywords..." value="${state.search}">
+  </div>
+  <div class="filter-row">
+    ${CATS.map(c=>`<button class="pill${state.cat===c?" active":""}" data-cat="${c}">${c}</button>`).join("")}
+  </div>
+  <div class="filter-row">
+    ${PHASES.map(ph=>`<button class="pill${state.phase===ph?" active":""}" data-phase="${ph}">${ph}</button>`).join("")}
+  </div>
+  ${items.length===0
+    ? `<div class="no-results">No projects match — try a different search or filter</div>`
+    : `<div class="grid">${items.map(p=>`
+        <div class="card" data-id="${p.id}">
+          <div class="card-id">#${String(p.id).padStart(2,"0")}</div>
+          <div class="card-title">${p.title}</div>
+          <div class="card-badges">
+            <span class="badge ${PH_CLS[p.phase]}">${PH_LBL[p.phase]}</span>
+            <span class="badge cat-badge">${p.cat}</span>
+          </div>
+        </div>`).join("")}
+      </div>`}`;
+
+  document.getElementById("srch").addEventListener("input",e=>{state.search=e.target.value;render()});
+  document.querySelectorAll("[data-cat]").forEach(b=>b.addEventListener("click",()=>{state.cat=b.dataset.cat;render()}));
+  document.querySelectorAll("[data-phase]").forEach(b=>b.addEventListener("click",()=>{state.phase=b.dataset.phase;render()}));
+  document.querySelectorAll(".card").forEach(c=>c.addEventListener("click",()=>{state.selected=parseInt(c.dataset.id);render()}));
+}
+
+function renderDetail(){
+  const p = get(state.selected);
+  const prereqLinks = p.prereqs.map(id=>{const r=get(id);return r?`<button class="link-tag" data-nav="${id}">#${String(id).padStart(2,"0")} ${r.title}</button>`:""}).join("");
+  const relLinks    = p.related.map(id=>{const r=get(id);return r?`<button class="link-tag" data-nav="${id}">#${String(id).padStart(2,"0")} ${r.title}</button>`:""}).join("");
+  const toolTags    = p.tools.map(t=>`<span class="tool-tag">${t}</span>`).join("");
+
+  app().innerHTML = `
+  <button class="back-btn" id="back">← back to all projects</button>
+  <div class="detail">
+    <div class="detail-header">
+      <div>
+        <div class="detail-id">Project #${String(p.id).padStart(2,"0")} &middot; ${p.cat}</div>
+        <div class="detail-title">${p.title}</div>
+        <span class="badge ${PH_CLS[p.phase]}">${PH_LBL[p.phase]}</span>
+      </div>
+    </div>
+    <p class="detail-desc">${p.desc}</p>
+    ${p.prereqs.length?`<div class="detail-section"><div class="detail-label">Prerequisites</div><div class="tag-row">${prereqLinks}</div></div>`:""}
+    ${p.related.length?`<div class="detail-section"><div class="detail-label">Related projects</div><div class="tag-row">${relLinks}</div></div>`:""}
+    <div class="detail-section"><div class="detail-label">Tools &amp; technologies</div><div class="tag-row">${toolTags}</div></div>
+    <div class="detail-section">
+      <div class="detail-label">Resume skill demonstrated</div>
+      <div class="resume-box"><strong>What this proves:</strong> ${p.resume}</div>
+    </div>
+  </div>`;
+
+  document.getElementById("back").addEventListener("click",()=>{state.selected=null;render()});
+  document.querySelectorAll("[data-nav]").forEach(b=>b.addEventListener("click",()=>{state.selected=parseInt(b.dataset.nav);render()}));
+}
+
+render();
+</script>
+</body>
+</html>
